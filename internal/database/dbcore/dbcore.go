@@ -45,7 +45,7 @@ func GetDBInstance() *gorm.DB {
 			instance.Exec("PRAGMA wal_checkpoint(TRUNCATE);")
 		case "mysql":
 			// MySQL 连接
-			dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Local",
+			dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Local&timeout=10s&readTimeout=30s&writeTimeout=30s",
 				flags.DatabaseUser,
 				flags.DatabasePass,
 				flags.DatabaseHost,
@@ -56,6 +56,9 @@ func GetDBInstance() *gorm.DB {
 				log.Fatalf("Failed to connect to MySQL database: %v", err)
 			}
 			log.Printf("Using MySQL database: %s@%s:%s/%s", flags.DatabaseUser, flags.DatabaseHost, flags.DatabasePort, flags.DatabaseName)
+			
+			// [Fix] Drop conflicting table to resolve schema drift on slow connections
+			instance.Exec("DROP TABLE IF EXISTS offline_notifications")
 		default:
 			log.Fatalf("Unsupported database type: %s", flags.DatabaseType)
 		}

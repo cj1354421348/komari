@@ -11,6 +11,7 @@ RUN apk add --no-cache tzdata
 COPY komari-${TARGETOS}-${TARGETARCH} /app/komari
 
 RUN chmod +x /app/komari
+RUN mkdir -p /app/data
 
 ENV GIN_MODE=release
 ENV KOMARI_DB_TYPE=sqlite

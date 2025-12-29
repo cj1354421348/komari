@@ -27,6 +27,7 @@ func Default() Config {
 		},
 		Notification: Notification{
 			NotificationEnabled:    true,
+			NotificationTemplate:   "{{emoji}}{{emoji}}{{emoji}}\nEvent: {{event}}\nClients: {{client}}\nMessage: {{message}}\nTime: {{time}}",
 			TrafficLimitPercentage: 80.00,
 		},
 		Record: Record{
